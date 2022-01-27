@@ -1,0 +1,18 @@
+[{"globalatt": [{"platform_name": "StationM"}], "TEMPatt": [{"fillvalue": -999}, {"standard_name": "insert_here", "long_name": "blahblah"}]}][
+ {
+  "globalatt": [
+   {
+    "platform_name": "StationM"
+   }
+  ],
+  "TEMPatt": [
+   {
+    "fillvalue": -999
+   },
+   {
+    "standard_name": "insert_here",
+    "long_name": "blahblah"
+   }
+  ]
+ }
+]
