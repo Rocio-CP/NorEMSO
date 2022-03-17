@@ -59,18 +59,33 @@
       "in_situ_samples_recovery": ""
     }
   ],
-  "LATITUDE_varatt": [
+  "TIME_varatt": [
+    {"_FillValue": -999, "datatype": "f"},
+    {
+      "standard_name": "time",
+      "long_name": "time of measurement",
+      "units": "days since 1950-01-01T00:00:00Z",
+      "valid_min": 0.0,
+      "valid_max": 90000.0,
+      "uncertainty": "",
+      "comment": "",
+      "axis": "T",
+      "ancillary_variables": "TIME_QC",
+      "QC_indicator": "good data"
+    }
+  ],  "LATITUDE_varatt": [
     {"_FillValue": -999, "datatype": "f"},
     {
       "standard_name": "latitude",
       "long_name": "Latitude of each location",
       "units": "degree_east",
-      "valid_min": -90.,
-      "valid_max": 90.,
+      "valid_min": -90.0,
+      "valid_max": 90.0,
       "uncertainty": "",
       "comment": "",
       "axis": "Y",
-      "ancillary_variables": "POSITION_QC"
+      "ancillary_variables": "POSITION_QC",
+      "QC_indicator": "good data"
     }
   ],
   "LONGITUDE_varatt": [
@@ -79,12 +94,14 @@
       "standard_name": "longitude",
       "long_name": "Longitude of each location",
       "units": "degree_east",
-      "valid_min": -180.,
-      "valid_max": 180.,
+      "valid_min": -180.0,
+      "valid_max": 180.0,
       "uncertainty": "",
       "comment": "",
       "axis": "X",
-      "ancillary_variables": "POSITION_QC"
+      "ancillary_variables": "POSITION_QC",
+      "QC_indicator": "good data"
+
     }
   ],
   "DEPTH_varatt": [
@@ -94,6 +111,7 @@
       "units": "decibar",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "pressure",
+      "coverage_content_type": "physicalMeasurement",
       "QC_indicator": "All QC tests passed",
       "processing_level": "Data manually reviewed",
       "valid_min": 12000.0,
@@ -128,6 +146,7 @@
       "units": "degree_C",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "temperature",
+      "coverage_content_type": "physicalMeasurement",
       "QC_indicator": "All QC tests passed",
       "processing_level": "Data manually reviewed",
       "valid_min": -2.0,
@@ -162,6 +181,7 @@
       "units": "decibar",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "pressure",
+      "coverage_content_type": "physicalMeasurement",
       "QC_indicator": "All QC tests passed",
       "processing_level": "Data manually reviewed",
       "valid_min": 12000.0,
@@ -196,6 +216,7 @@
       "units": "mS/cm",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "conductivity",
+      "coverage_content_type": "physicalMeasurement",
       "QC_indicator": "All QC tests passed",
       "processing_level": "Data manually reviewed",
       "valid_min": 0.0,
@@ -230,6 +251,7 @@
       "units": "psu",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "",
+      "coverage_content_type": "physicalMeasurement",
       "QC_indicator": "All QC tests passed",
       "processing_level": "Data manually reviewed",
       "valid_min": 0.0,
@@ -241,7 +263,7 @@
       "resolution": "",
       "DM_indicator": "D",
       "reference_scale": "PSS-78",
-      "sdn_parameter_name": "Practical salinity of the water body by computation using UNESCO 1983 \nalgorithm",
+      "sdn_parameter_name": "Practical salinity of the water body by computation using UNESCO 1983 algorithm",
       "sdn_parameter_urn": "SDN:P01::PSALZZXX",
       "sdn_uom_name": "Dimensionless",
       "sdn_uom_urn": "SDN:P06::UUUU",
@@ -261,6 +283,7 @@
     {"_FillValue": -999, "datatype": "f"},
     {
       "long_name": "",
+      "coverage_content_type": "qualityInformation",
       "conventions": "OceanSITES QC Flags",
       "flag_values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       "flag_meanings":"no_qc_performed good_data probably_good_data bad_data_that_are_potentially_correctable bad_data value_changed not_used nominal_value interpolated_value missing_value"

@@ -56,7 +56,7 @@ for vn in cvn.values():
         # keep the variable attributes + customize +
         # keep QC variable attributes
         if vn+"_sensor_L22" in deployment:
-            metadata[vn+"_varatt"][1]["sensor_SeaVox_L22_code"]=deployment[vn+"_sensor_L22"].item()
+            metadata[vn+"_varatt"][1]["sensor_SeaVox_L22_code"]=deployment[vn+"_sensor_SeaVox_L22_code"].item()
         # QC variables
         metadata[vn + "_QC_varatt"] = metadata["QC_varatt"]
         metadata[vn + "_QC_varatt"][1]["long_name"] =metadata[vn + "_varatt"][1]["long_name"]+" quality flag"
