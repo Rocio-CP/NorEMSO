@@ -22,9 +22,11 @@ nc = Dataset("testStM.nc", format="NETCDF4_CLASSIC", mode="w")
 for d in dimensions:
     dimname=re.split('dimatt',d)[0]
 
+    # Create dimension
     dim = nc.createDimension(dimname, 1)
     otheratts = attributes[v][0]
 
+    # Create dimension variable
     dimvar = nc.createVariable(dimname, otheratts["datatype"],otheratts["dimensions"], fill_value=otheratts["_FillValue"])
     dimattributes=attributes[d][1]
     for key, value in dimattributes.items():

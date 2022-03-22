@@ -12,7 +12,7 @@
       "array": "",
       "network": "EMSO-ERIC",
       "keywords_vocabulary": "",
-      "keyword": "",
+      "keywords": "",
       "sea_area": "",
       "geospatial_lat_min": "",
       "geospatial_lat_max": "",
@@ -73,7 +73,8 @@
       "ancillary_variables": "TIME_QC",
       "QC_indicator": "good data"
     }
-  ],  "LATITUDE_varatt": [
+  ],
+  "LATITUDE_varatt": [
     {"_FillValue": -999, "datatype": "f"},
     {
       "standard_name": "latitude",
@@ -101,7 +102,6 @@
       "axis": "X",
       "ancillary_variables": "POSITION_QC",
       "QC_indicator": "good data"
-
     }
   ],
   "DEPTH_varatt": [
