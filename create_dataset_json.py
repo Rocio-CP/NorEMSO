@@ -1,7 +1,9 @@
 import json
+import numpy as np
 
 outputjsonfilename='StMtest'
 deployments=pd.read_csv("testdeployments.csv", sep="\t")
+deployments=deployments.replace(np.nan,'',regex=True) # Replace nan with empty text
 deployment=deployments.iloc[0]
 
 # Create the json file
@@ -16,7 +18,6 @@ deployment=deployments.iloc[0]
 with open("NorEMSO_metadata.json", "r") as template:
     metadata=json.load(template)
 template.close()
-
 
 
 for vn in cvn.values():
@@ -52,10 +53,12 @@ for vn in cvn.values():
 
 print(metadata)
 # Global attributes
-metadata['globalatt'][0]['site_code'] = "StationM"
+# Set global attributes values in the deployments file
+globalatt_fromfile=deployments.columns[deployments.columns.str.islower()]
+for gf in globalatt_fromfile:
+    metadata['globalatt'][0][gf]=deployment[gf]
 
-metadata['globalatt'][0]['principal_investigator'] = deployment["PI"].item()
-
+# Global attributes calculated from dataset values
 metadata['globalatt'][0]["time_coverage_start"]=dtobj.iloc[0].strftime("%Y-%m-%dT%H:%M:%SZ")
 metadata['globalatt'][0]["time_coverage_end"]=dtobj.iloc[-1].strftime("%Y-%m-%dT%H:%M:%SZ")
 metadata['globalatt'][0]["time_coverage_resolution"]=isodate.duration_isoformat(dtobj.diff().shift(-1).mode().item()) # pick the mode
