@@ -16,18 +16,19 @@ files=deployment["FILES"].split(",") # List of files
 # deployment=deployments[deployments['file']==filename]
 
 # Depth info is in filename
-depthstring = re.findall("\d+m", currentfile)
-depthvalue = float(depthstring[0][0:-1])
-alldepths=re.findall("\d+m", files)
+alldepths=[float(re.findall("\d+m",f)[0][0:-1]) for f in files]
+# Create rank of alldepths; they may not be in order
+temp = np.array(alldepths).argsort()
+depthranks = np.empty_like(temp)
+depthranks[temp] = np.arange(len(alldepths))
 
 for currentfile in files:
-
-    #filename="StaM_SBE_20200825.txt"
-    currentfile=files[0]
-
-
+#    currentfile=files[0]
     records=pd.read_csv(currentfile, sep="\t")
     variablenames=records.columns
+    TEMPvar[currentdepthrank,]=records["T_degC"]
+
+
 
 
     # Date and time separated: create 1950-date
