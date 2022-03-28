@@ -30,30 +30,30 @@ fulldataframe.rename(columns={"Depth_m":cvn['depth'],"Depth_qf":cvn['depth']+"_Q
                         "S": cvn['sal'], "S_qf": cvn['sal'] + "_QC", "S_raw": cvn['sal'] + "_UNCALIBRATED","S_raw_qf": cvn['sal'] + "_UNCALIBRATED_QC"
                         }, inplace=True)
 
-# Create timestamp series (as datetime64 object). Need dateparser because Norwegian
+# Create timestamp pandas series (as datetime64 object) not list! Need dateparser because Norwegian
 dtobj = fulldataframe.apply(
     lambda x: dateparser.parse(x['Date'] + x['Time'], settings={'TIMEZONE': 'UTC', 'RETURN_AS_TIMEZONE_AWARE': True},
                                languages=['nb']), axis=1)
 # Dates have different SECONDS. Have all the seconds to zero
-dtobj=[x.replace(second=10) for x in dtobj] # this is something syntax
+dtobj= dtobj.apply(lambda x: x.replace(second=0))
 # Create days-from-1950 numeric date
-diff = dtobj - datetime.datetime(1950, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc)
+diff = dtobj - pd.Timestamp('1950-01-01T00:00:00', tz='UTC')
 timenumeric = diff.dt.total_seconds() / 86400
 # Remove Date and Time from the dataframe
 fulldataframe.drop(['Date','Time'], inplace=True, axis=1)
 
 # Create dimension variables: latitude/longitude values, depth and time arrays
-LATITUDEvar=deployment["DEPLOY_LAT"]
-LONGITUDEvar=deployment["DEPLOY_LON"]
+LATITUDEvar=[deployment["DEPLOY_LAT"]]
+LONGITUDEvar=[deployment["DEPLOY_LON"]]
 DEPTHvar= depthvalues
-TIMEvar=timenumeric
+TIMEvar=timenumeric[0:timenumeric.idxmax()]
 
 # Create variable DEPTH/TIME/variables 3-d matrix
 # If all dates are equal across the files (slow, and means to iterate twice, but can't think of anything else)
 # time it
 tic=datetime.datetime.now()
 if all([(len(set(dtobj[i]))==1) for i in dtobj.index]):
-    allvars_fulldataframe=np.empty([len(files), timenumeric.idxmax() + 1,len(fulldataframe.columns)])
+    allvars_fulldataframe=np.empty([len(files), timenumeric.idxmax(),len(fulldataframe.columns)])
     for c, v in enumerate(fulldataframe.columns):
         for i in timenumeric.index:
             allvars_fulldataframe[:,i,c]=fulldataframe[v][i]

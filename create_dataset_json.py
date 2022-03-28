@@ -2,8 +2,9 @@ import json
 import numpy as np
 
 outputjsonfilename='StMtest'
-deployments=pd.read_csv("testdeployments.csv", sep="\t")
-deployments=deployments.replace(np.nan,'',regex=True) # Replace nan with empty text
+deployments=pd.read_csv("testdeployments.csv", sep="\t",
+                        dtype='str', converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
+#deployments=deployments.replace(np.nan,'',regex=True) # Replace nan with empty text
 deployment=deployments.iloc[0]
 
 # Create the json file
@@ -21,7 +22,7 @@ template.close()
 
 
 for vn in cvn.values():
-    if vn not in records and vn!='LATITUDE' and vn!='LONGITUDE':
+    if vn not in fulldataframe.columns and vn!='LATITUDE' and vn!='LONGITUDE' and vn!='TIME' and vn!='DEPTH':
         print('no need for '+ vn+' attributes')
         if vn+"_varatt" in metadata:
             print('something to delete! '+ vn)
@@ -30,13 +31,11 @@ for vn in cvn.values():
     else:
         # keep the variable attributes + customize +
         # keep QC variable attributes
-        if vn+"_sensor_L22" in deployment:
-            metadata[vn+"_varatt"][1]["sensor_SeaVox_L22_code"]=deployment[vn+"_sensor_SeaVox_L22_code"].item()
-        # QC variables
+         # QC variables
         metadata[vn + "_QC_varatt"] = metadata["QC_varatt"]
         metadata[vn + "_QC_varatt"][1]["long_name"] =metadata[vn + "_varatt"][1]["long_name"]+" quality flag"
 
-    if vn+"_UNCALIBRATED" in records:
+    if vn+"_UNCALIBRATED" in fulldataframe.columns:
         # copy the vn attributes and the QC, with modifications
         metadata[vn+"_UNCALIBRATED_varatt"]=metadata[vn+"_varatt"]
         metadata[vn + "_UNCALIBRATED_varatt"][1]["standard_name"]=""
@@ -63,6 +62,17 @@ metadata['globalatt'][0]["time_coverage_start"]=dtobj.iloc[0].strftime("%Y-%m-%d
 metadata['globalatt'][0]["time_coverage_end"]=dtobj.iloc[-1].strftime("%Y-%m-%dT%H:%M:%SZ")
 metadata['globalatt'][0]["time_coverage_resolution"]=isodate.duration_isoformat(dtobj.diff().shift(-1).mode().item()) # pick the mode
 
+def clean_empty_entries(d):
+    if isinstance(d, dict):
+        return {
+            k: v
+            for k, v in ((k, clean_empty_entries(v)) for k, v in d.items())
+            if v
+        }
+    if isinstance(d, list):
+        return [v for v in map(clean_empty_entries, d) if v]
+    return d
+
 
 clean_empty_entries(metadata)
 
@@ -71,13 +81,3 @@ with open(outputjsonfilename+".json", 'w') as fp:
 fp.close()
 
 
-def clean_empty_entries(d):
-    if isinstance(d, dict):
-        return {
-            k: v
-            for k, v in ((k, clean_empty(v)) for k, v in d.items())
-            if v
-        }
-    if isinstance(d, list):
-        return [v for v in map(clean_empty, d) if v]
-    return d

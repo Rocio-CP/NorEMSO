@@ -60,7 +60,7 @@
     }
   ],
   "TIME_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": "TIME"},
     {
       "standard_name": "time",
       "long_name": "time of measurement",
@@ -75,7 +75,7 @@
     }
   ],
   "LATITUDE_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": "LATITUDE"},
     {
       "standard_name": "latitude",
       "long_name": "Latitude of each location",
@@ -90,7 +90,7 @@
     }
   ],
   "LONGITUDE_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": "LONGITUDE"},
     {
       "standard_name": "longitude",
       "long_name": "Longitude of each location",
@@ -105,7 +105,7 @@
     }
   ],
   "DEPTH_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": "DEPTH"},
     {
       "standard_name": "",
       "long_name": "Nominal depth of each location",
@@ -120,7 +120,7 @@
     }
   ],
   "PRES_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
     {
       "standard_name": "sea_water_pressure",
       "units": "decibar",
@@ -155,7 +155,7 @@
     }
   ],
   "TEMP_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
     {
       "standard_name": "sea_water_temperature",
       "units": "degree_C",
@@ -190,7 +190,7 @@
     }
   ],
   "CNDC_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
     {
       "standard_name": "sea_water_electrical_conductivity",
       "units": "mS/cm",
@@ -225,7 +225,7 @@
     }
   ],
   "PSAL_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
     {
       "standard_name": "sea_water_practical_salinity",
       "units": "psu",
@@ -260,7 +260,7 @@
     }
   ],
   "QC_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
+    {"_FillValue": -999, "datatype": "f", "dimensions": ["DEPTH","TIME"]},
     {
       "long_name": "",
       "coverage_content_type": "qualityInformation",
