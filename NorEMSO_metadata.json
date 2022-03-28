@@ -107,6 +107,21 @@
   "DEPTH_varatt": [
     {"_FillValue": -999, "datatype": "f"},
     {
+      "standard_name": "",
+      "long_name": "Nominal depth of each location",
+      "units": "meters",
+      "valid_min": 0.0,
+      "valid_max": 10000.0,
+      "uncertainty": "",
+      "comment": "",
+      "axis": "Z",
+      "ancillary_variables": "",
+      "QC_indicator": "nominal values"
+    }
+  ],
+  "PRES_varatt": [
+    {"_FillValue": -999, "datatype": "f"},
+    {
       "standard_name": "sea_water_pressure",
       "units": "decibar",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
@@ -162,41 +177,6 @@
       "sdn_parameter_urn": "SDN:P01::TEMPPR01",
       "sdn_uom_name": "Degrees Celsius",
       "sdn_uom_urn": "SDN:P06::UPAA",
-      "sensor_model": "",
-      "sensor_manufacturer": "",
-      "sensor_SeaVox_L22_code": "",
-      "sensor_reference": "",
-      "sensor_serial_number": "",
-      "sensor_mount": "mounted on mooring line",
-      "sensor_orientation": "vertical",
-      "sensor_data_start_date": "",
-      "sensor_data_end_date": "",
-      "sensor_data_file_DOI": ""
-    }
-  ],
-  "PRES_varatt": [
-    {"_FillValue": -999, "datatype": "f"},
-    {
-      "standard_name": "sea_water_pressure",
-      "units": "decibar",
-      "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
-      "long_name": "pressure",
-      "coverage_content_type": "physicalMeasurement",
-      "QC_indicator": "All QC tests passed",
-      "processing_level": "Data manually reviewed",
-      "valid_min": 12000.0,
-      "valid_max": 0.0,
-      "ancillary_variables": "PRES_QC",
-      "uncertainty": "",
-      "accuracy": "",
-      "precision": "",
-      "resolution": "",
-      "DM_indicator": "D",
-      "reference_scale": "",
-      "sdn_parameter_name": "Pressure (measured variable) exerted by the water body plus atmosphere by fixed in-situ pressure sensor",
-      "sdn_parameter_urn": "SDN:P01::PRSTPS01",
-      "sdn_uom_name": "Decibars",
-      "sdn_uom_urn": "SDN:P06::UPDB",
       "sensor_model": "",
       "sensor_manufacturer": "",
       "sensor_SeaVox_L22_code": "",

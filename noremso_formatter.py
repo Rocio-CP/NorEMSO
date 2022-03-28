@@ -32,17 +32,19 @@ for d in dimensions:
     for key, value in dimattributes.items():
       dimvar.setncattr(key, value)
 
-for v in variables:
+for ind, v in enumerate(variables):
     vname=re.split('varatt',v)[0]
 
     otheratts=attributes[v][0]
     var = nc.createVariable(vname, otheratts["datatype"],otheratts["dimensions"], fill_value=otheratts["_FillValue"])
 
+
+    var[:,:] = allvars_fulldataframe[:,:,ind]
+
     varattributes=attributes[v][1]
     for key, value in varattributes.items():
       var.setncattr(key, value)
-
-
+####
 
 #####
 
