@@ -54,12 +54,12 @@
       "emso_facility": "Nordic_Seas",
       "project": "NorEMSO",
       "nominal_position": "",
-      "DOI": "",
+      "doi": "",
       "in_situ_samples_deployment": "",
       "in_situ_samples_recovery": ""
     }
   ],
-  "TIME_varatt": [
+  "TIME_dimatt": [
     {"_FillValue": -999, "datatype": "f","dimensions": "TIME"},
     {
       "standard_name": "time",
@@ -74,7 +74,7 @@
       "QC_indicator": "good data"
     }
   ],
-  "LATITUDE_varatt": [
+  "LATITUDE_dimatt": [
     {"_FillValue": -999, "datatype": "f","dimensions": "LATITUDE"},
     {
       "standard_name": "latitude",
@@ -89,7 +89,7 @@
       "QC_indicator": "good data"
     }
   ],
-  "LONGITUDE_varatt": [
+  "LONGITUDE_dimatt": [
     {"_FillValue": -999, "datatype": "f","dimensions": "LONGITUDE"},
     {
       "standard_name": "longitude",
@@ -104,7 +104,7 @@
       "QC_indicator": "good data"
     }
   ],
-  "DEPTH_varatt": [
+  "DEPTH_dimatt": [
     {"_FillValue": -999, "datatype": "f","dimensions": "DEPTH"},
     {
       "standard_name": "",
