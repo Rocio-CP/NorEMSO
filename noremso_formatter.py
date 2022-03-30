@@ -15,13 +15,15 @@ deployments_file = "testdeployments.csv"
 deployments = pd.read_csv(deployments_file, sep="\t", dtype='str',
                           converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
 
-deployment_info = deployments.iloc[[0]]  # substitute with for loop
+deployment_info = deployments.iloc[0]  # substitute with for loop
+
 
 # Read input data files and create 3d array
-(latitude_variable, longitude_variable, time_variable, depth_variable,
- variables_list, data_3d_matrix) = create_StM_data_3d_array(deployment_info)
+(dimensions_variables, variables_list, data_3d_array) \
+    = create_StM_data_3d_array(deployment_info)
 # Create the metadata json file
-(json_filename) = create_metadata_json(deployment_info, variables_list)
+(json_filename) \
+    = create_metadata_json(deployment_info, variables_list, dimensions_variables)
 
 # Read metadata into dictionary
 json_filename_full = json_filename + ".json"
@@ -37,7 +39,8 @@ globattDict = attributes[globals[0]][0]
 
 # List of dimensions
 # dimensions = [dim for dim in typesofatt if "dim" in dim]
-dimensions = ['LATITUDE_varatt', 'LONGITUDE_varatt', 'TIME_varatt', 'DEPTH_varatt']
+#dimensions = ['LATITUDE_varatt', 'LONGITUDE_varatt', 'TIME_varatt', 'DEPTH_varatt']
+
 
 # List of variables
 variables = [var for var in typesofatt if "var" in var]
@@ -48,26 +51,27 @@ nc = Dataset(nc_filename_full, format="NETCDF4_CLASSIC", mode="w")
 
 # Assign
 # based on Maren's script
-for d in dimensions:
+for d in dimensions_variables.keys():
+#for d in dimensions:
     #    dimname=re.split('dimatt',d)[0]
-    dimname = re.split('_varatt', d)[0]
+    dimname = str.upper(re.split('_variable', d)[0])
 
     # Create dimension
-    dimnamesize = eval(dimname + "var")
-    dim = nc.createDimension(dimname, len(dimnamesize))
-    otheratts = attributes[d][0]
+    dimnamesize = len(dimensions_variables[d])
+    dim = nc.createDimension(dimname, dimnamesize)
+    otheratts = attributes[dimname+"_dimatt"][0]
 
     # Create dimension variable
     dimvar = nc.createVariable(dimname, otheratts["datatype"], otheratts["dimensions"],
                                fill_value=otheratts["_FillValue"])
-    dimattributes = attributes[d][1]
+    dimattributes = attributes[dimname+"_dimatt"][1]
     for key, value in dimattributes.items():
         dimvar.setncattr(key, value)
 
-    dimvar[:] = dimnamesize
+    dimvar[:] = dimensions_variables[d]
 
 # for ind, v in enumerate(variables):
-for ind, v in enumerate(fulldataframe.columns):
+for ind, v in enumerate(variables_list):
 
     # vname=re.split('varatt',v)[0]
     vname = v
@@ -82,7 +86,7 @@ for ind, v in enumerate(fulldataframe.columns):
     for key, value in varattributes.items():
         var.setncattr(key, value)
 
-    var[:] = allvars_fulldataframe[:, :, ind]
+    var[:] = data_3d_array[:, :, ind]
 
 # Set global attributes
 nc.setncatts(globattDict)

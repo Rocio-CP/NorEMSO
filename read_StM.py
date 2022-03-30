@@ -8,10 +8,11 @@ import numpy as np
 variables_dict = {'time': 'TIME', 'lat': 'LATITUDE', 'lon': 'LONGITUDE', 'depth': 'DEPTH',
                   'press': 'PRES', 'temp': 'TEMP', 'sal': 'PSAL', 'cond': 'CNDC'}
 
+
 def create_StM_data_3d_array(deployment_info):
     latitude_variable = [deployment_info["DEPLOY_LAT"]]
     longitude_variable = [deployment_info["DEPLOY_LON"]]
-    data_files = deployment_info["FILES"].split(",")  # List of data_files
+    data_files = deployment_info["FILES"].split(",")  # Need the [0] because it's a dataframe, not a series. List of data_files
     # Depth information is in the data files names
     depth_variable = [float(re.findall("\d+m", current_file)[0][0:-1]) for current_file in data_files]
 
@@ -42,7 +43,6 @@ def create_StM_data_3d_array(deployment_info):
                                    "S_raw_qf": variables_dict['sal'] + "_UNCALIBRATED_QC"
                                    }, inplace=True)
 
-
     # Create timestamp pandas series (as datetime64 object) not list! Need dateparser because Norwegian
     datetime_obj = full_dataframe.apply(
         lambda x: dateparser.parse(x['Date'] + x['Time'],
@@ -54,9 +54,15 @@ def create_StM_data_3d_array(deployment_info):
     datetime_diff_1950 = datetime_obj - pd.Timestamp('1950-01-01T00:00:00', tz='UTC')
     datetime_numeric_1950 = datetime_diff_1950.dt.total_seconds() / 86400
     time_variable = datetime_numeric_1950[0:datetime_numeric_1950.idxmax() + 1]
+    # Check time_variable is increasingly monotonic
+
     # Remove Date and Time from the full_dataframe
     full_dataframe.drop(['Date', 'Time'], inplace=True, axis=1)
 
+    dimensions_variables = {'latitude_variable': latitude_variable,
+                            'longitude_variable': longitude_variable,
+                            'depth_variable': depth_variable,
+                            'time_variable': time_variable}
     variables_list = full_dataframe.columns
 
     # Create variable DEPTH/TIME/variables 3-d numpy array
@@ -76,5 +82,4 @@ def create_StM_data_3d_array(deployment_info):
     toc = datetime.datetime.now() - tic
     print("Creating the 3d array took " + str(toc))
 
-    return (latitude_variable, longitude_variable, time_variable, depth_variable,
-           variables_list, data_3d_matrix)
+    return (dimensions_variables, variables_list, data_3d_matrix)
