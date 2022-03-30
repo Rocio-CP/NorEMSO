@@ -15,7 +15,7 @@ deployments_file = "testdeployments.csv"
 deployments = pd.read_csv(deployments_file, sep="\t", dtype='str',
                           converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
 
-deployment_info = deployments.iloc[0]  # substitute with for loop
+deployment_info = deployments.iloc[[0]]  # substitute with for loop
 
 # Read input data files and create 3d array
 (latitude_variable, longitude_variable, time_variable, depth_variable,
