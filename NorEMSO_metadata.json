@@ -71,7 +71,11 @@
       "comment": "",
       "axis": "T",
       "ancillary_variables": "TIME_QC",
-      "QC_indicator": "good data"
+      "QC_indicator": "good data",
+      "sdn_parameter_name": "Elapsed time relative to 1950-01-01T00:00:00Z",
+      "sdn_parameter_urn": "SDN:P01::ELTJLD01",
+      "sdn_uom_name": "days",
+      "sdn_uom_urn": "SDN:P06::UTAA"
     }
   ],
   "LATITUDE_dimatt": [
@@ -79,14 +83,18 @@
     {
       "standard_name": "latitude",
       "long_name": "Latitude of each location",
-      "units": "degree_east",
+      "units": "degrees_north",
       "valid_min": -90.0,
       "valid_max": 90.0,
       "uncertainty": "",
       "comment": "",
       "axis": "Y",
       "ancillary_variables": "POSITION_QC",
-      "QC_indicator": "good data"
+      "QC_indicator": "good data",
+      "sdn_parameter_name": "Latitude north",
+      "sdn_parameter_urn": "SDN:P01::ALATZZ01",
+      "sdn_uom_name": "Degrees north",
+      "sdn_uom_urn": "SDN:P06::DEGN"
     }
   ],
   "LONGITUDE_dimatt": [
@@ -94,21 +102,25 @@
     {
       "standard_name": "longitude",
       "long_name": "Longitude of each location",
-      "units": "degree_east",
+      "units": "degrees_east",
       "valid_min": -180.0,
       "valid_max": 180.0,
       "uncertainty": "",
       "comment": "",
       "axis": "X",
       "ancillary_variables": "POSITION_QC",
-      "QC_indicator": "good data"
+      "QC_indicator": "good data",
+      "sdn_parameter_name": "Longitude east",
+      "sdn_parameter_urn": "SDN:P01::ALONZZ01",
+      "sdn_uom_name": "Degrees east",
+      "sdn_uom_urn": "SDN:P06::DEGE"
     }
   ],
   "DEPTH_dimatt": [
     {"_FillValue": -999, "datatype": "f","dimensions": "DEPTH"},
     {
       "standard_name": "",
-      "long_name": "Nominal depth of each location",
+      "long_name": "Nominal depth of measurements",
       "units": "meters",
       "valid_min": 0.0,
       "valid_max": 10000.0,
@@ -116,7 +128,11 @@
       "comment": "",
       "axis": "Z",
       "ancillary_variables": "",
-      "QC_indicator": "nominal values"
+      "QC_indicator": "nominal values",
+      "sdn_parameter_name": "Depth (spatial coordinate) relative to water surface in the water body",
+      "sdn_parameter_urn": "SDN:P01::ADEPZZ01",
+      "sdn_uom_name": "meters",
+      "sdn_uom_urn": "SDN:P06::ULAA"
     }
   ],
   "PRES_varatt": [
@@ -137,7 +153,6 @@
       "precision": "",
       "resolution": "",
       "DM_indicator": "D",
-      "reference_scale": "",
       "sdn_parameter_name": "Pressure (measured variable) exerted by the water body plus atmosphere by fixed in-situ pressure sensor",
       "sdn_parameter_urn": "SDN:P01::PRSTPS01",
       "sdn_uom_name": "Decibars",
@@ -151,7 +166,8 @@
       "sensor_orientation": "vertical",
       "sensor_data_start_date": "",
       "sensor_data_end_date": "",
-      "sensor_data_file_DOI": ""
+      "sensor_data_file_DOI": "",
+      "comment": ""
     }
   ],
   "TEMP_varatt": [
@@ -186,7 +202,8 @@
       "sensor_orientation": "vertical",
       "sensor_data_start_date": "",
       "sensor_data_end_date": "",
-      "sensor_data_file_DOI": ""
+      "sensor_data_file_DOI": "",
+      "comment": ""
     }
   ],
   "CNDC_varatt": [
@@ -221,7 +238,8 @@
       "sensor_orientation": "vertical",
       "sensor_data_start_date": "",
       "sensor_data_end_date": "",
-      "sensor_data_file_DOI": ""
+      "sensor_data_file_DOI": "",
+      "comment": ""
     }
   ],
   "PSAL_varatt": [
@@ -256,11 +274,47 @@
       "sensor_orientation": "vertical",
       "sensor_data_start_date": "",
       "sensor_data_end_date": "",
-      "sensor_data_file_DOI": ""
+      "sensor_data_file_DOI": "",
+      "comment": ""
+    }
+  ],
+    "PCOW_varatt": [
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
+    {
+      "standard_name": "partial_pressure_of_carbon_dioxide_in_sea_water",
+      "units": "uatm",
+      "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
+      "long_name": "",
+      "coverage_content_type": "physicalMeasurement",
+      "QC_indicator": "All QC tests passed",
+      "processing_level": "Data manually reviewed",
+      "valid_min": 0.0,
+      "valid_max": 10000.0,
+      "ancillary_variables": "PCOW_QC",
+      "uncertainty": "",
+      "accuracy": "",
+      "precision": "",
+      "resolution": "",
+      "DM_indicator": "D",
+      "sdn_parameter_name": "Partial pressure of carbon dioxide {CO2 CAS 124-38-9} {pCO2} in the water body",
+      "sdn_parameter_urn": "SDN:P01::PCO2XXXX",
+      "sdn_uom_name": "Microatmospheres",
+      "sdn_uom_urn": "SDN:P06::UATM",
+      "sensor_model": "",
+      "sensor_manufacturer": "",
+      "sensor_SeaVox_L22_code": "",
+      "sensor_reference": "",
+      "sensor_serial_number": "",
+      "sensor_mount": "mounted on mooring line",
+      "sensor_orientation": "vertical",
+      "sensor_data_start_date": "",
+      "sensor_data_end_date": "",
+      "sensor_data_file_DOI": "",
+      "comment": ""
     }
   ],
   "QC_varatt": [
-    {"_FillValue": -999, "datatype": "f", "dimensions": ["DEPTH","TIME"]},
+    {"_FillValue": -127, "datatype": "b", "dimensions": ["DEPTH","TIME"]},
     {
       "long_name": "",
       "coverage_content_type": "qualityInformation",

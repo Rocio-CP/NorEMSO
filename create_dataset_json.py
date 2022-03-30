@@ -64,6 +64,9 @@ def create_metadata_json(deployment_info, variables_list, dimensions_variables):
                 print(s)
                 metadata[vn + "_varatt"][1][s[5:]] = deployment_info[s]
 
+        # Comments to salinity do not apply to conductivity
+        metadata["CNDC_varatt"][1]["comment"] = ""
+
         # remove non-used entries (e.g. PCO2 in physics file)
 
         '''
