@@ -2,21 +2,18 @@ from netCDF4 import Dataset
 import json
 import re
 import pandas as pd
-
-from importlib import reload  # Python 3.4+
+import numpy as np
+# custom functions (instead of calling the scripts
 from read_StM import create_StM_data_3d_array
 from create_dataset_json import create_metadata_json
 
-# read_StM = reload(read_StM)
-
-# files names
+# Read and loop through the deployments information file
 deployments_file = "testdeployments.csv"
-
 deployments = pd.read_csv(deployments_file, sep="\t", dtype='str',
                           converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
 
 deployment_info = deployments.iloc[0]  # substitute with for loop
-
+deployment_info = deployment_info.replace(np.nan, '', regex=True)  # Replace nan with empty text
 
 # Read input data files and create 3d array
 (dimensions_variables, variables_list, data_3d_array) \
@@ -25,70 +22,60 @@ deployment_info = deployments.iloc[0]  # substitute with for loop
 (json_filename) \
     = create_metadata_json(deployment_info, variables_list, dimensions_variables)
 
-# Read metadata into dictionary
-json_filename_full = json_filename + ".json"
-with open(json_filename_full) as json_file:
+# Read metadata json back into a dictionary
+with open(json_filename) as json_file:
     attributes = json.load(json_file)
 
-# Split between global, dimension and variables' attributes
-typesofatt = list(attributes.keys())
-
-# Global attributes dictionary
-globals = [g for g in typesofatt if "global" in g]
-globattDict = attributes[globals[0]][0]
-
-# List of dimensions
-# dimensions = [dim for dim in typesofatt if "dim" in dim]
-#dimensions = ['LATITUDE_varatt', 'LONGITUDE_varatt', 'TIME_varatt', 'DEPTH_varatt']
-
-
-# List of variables
-variables = [var for var in typesofatt if "var" in var]
-
 # Create NetCDF file
-nc_filename_full = json_filename + ".nc"
-nc = Dataset(nc_filename_full, format="NETCDF4_CLASSIC", mode="w")
+nc_filename = deployment_info["INTERNAL_ID"] + ".nc"
+nc = Dataset(nc_filename, format="NETCDF4_CLASSIC", mode="w")
 
-# Assign
-# based on Maren's script
+# Generate dimensions and their variables
+# dimensions_variables is a DICTIONARY (with names and values)
 for d in dimensions_variables.keys():
-#for d in dimensions:
-    #    dimname=re.split('dimatt',d)[0]
-    dimname = str.upper(re.split('_variable', d)[0])
+    dimension_name = str.upper(re.split('_variable', d)[0])
 
     # Create dimension
-    dimnamesize = len(dimensions_variables[d])
-    dim = nc.createDimension(dimname, dimnamesize)
-    otheratts = attributes[dimname+"_dimatt"][0]
+    dimension_length = len(dimensions_variables[d])
+    dim = nc.createDimension(dimension_name, dimension_length)
+    # Attributes needed to create the variable
+    create_attributes = attributes[dimension_name + "_dimatt"][0]
 
     # Create dimension variable
-    dimvar = nc.createVariable(dimname, otheratts["datatype"], otheratts["dimensions"],
-                               fill_value=otheratts["_FillValue"])
-    dimattributes = attributes[dimname+"_dimatt"][1]
-    for key, value in dimattributes.items():
-        dimvar.setncattr(key, value)
+    dimension_variable = nc.createVariable(dimension_name,
+                                           create_attributes["datatype"],
+                                           create_attributes["dimensions"],
+                                           fill_value=create_attributes["_FillValue"])
+    # Dimension variable attributes
+    dimension_variable_attributes = attributes[dimension_name + "_dimatt"][1]
+    for key, value in dimension_variable_attributes.items():
+        dimension_variable.setncattr(key, value)
+    # Dimension variable values
+    dimension_variable[:] = dimensions_variables[d]
 
-    dimvar[:] = dimensions_variables[d]
+# Generate variables
+# variables_list is a list of variables' names (values are in data_3d_array)
+for variable_ind, variable_name in enumerate(variables_list):
+    # Attributes needed to create the variable
+    create_attributes = attributes[variable_name + "_varatt"][0]
 
-# for ind, v in enumerate(variables):
-for ind, v in enumerate(variables_list):
-
-    # vname=re.split('varatt',v)[0]
-    vname = v
-
-    # otheratts=attributes[v][0]
-    otheratts = attributes[v + "_varatt"][0]
-
-    var = nc.createVariable(vname, otheratts["datatype"], otheratts["dimensions"], fill_value=otheratts["_FillValue"])
-
-    # varattributes=attributes[v][1]
-    varattributes = attributes[v + "_varatt"][1]
-    for key, value in varattributes.items():
-        var.setncattr(key, value)
-
-    var[:] = data_3d_array[:, :, ind]
+    # Create variable
+    variable = nc.createVariable(variable_name,
+                                 create_attributes["datatype"],
+                                 create_attributes["dimensions"],
+                                 fill_value=create_attributes["_FillValue"])
+    # Variable attributes
+    variable_attributes = attributes[variable_name + "_varatt"][1]
+    for key, value in variable_attributes.items():
+        variable.setncattr(key, value)
+    # Variable values
+    variable[:] = data_3d_array[:, :, variable_ind]
 
 # Set global attributes
-nc.setncatts(globattDict)
-print(nc)
+global_attributes = [g for g in attributes.keys() if "global" in g]
+global_attributes_dict = attributes[global_attributes[0]][0]
+nc.setncatts(global_attributes_dict)
+
+# Close NetCDF file
+# print(nc)
 nc.close()
