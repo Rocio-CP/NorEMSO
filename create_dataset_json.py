@@ -1,8 +1,7 @@
 import datetime
 import isodate
 import json
-import numpy as np
-
+import copy
 
 def clean_empty_entries(d):
     if isinstance(d, dict):
@@ -32,7 +31,8 @@ def create_metadata_json(deployment_info, variables_list, dimensions_variables):
         # Create UNCALIBRATED entries
         if "UNCALIBRATED" in vn and "QC" not in vn:
             base_variable = vn[0:4]  # Assuming variable names will be 4-letters
-            metadata[vn + "_varatt"] = metadata[base_variable + "_varatt"]
+            metadata[vn + "_varatt"] = copy.deepcopy(
+                metadata[base_variable + "_varatt"])  # DEEPCOPY. Otherwise, it's a link more than a copy
             metadata[vn + "_varatt"][1]["standard_name"] = ""
             metadata[vn + "_varatt"][1]["long_name"] = \
                 metadata[base_variable + "_varatt"][1]["long_name"] \
@@ -40,15 +40,21 @@ def create_metadata_json(deployment_info, variables_list, dimensions_variables):
             metadata[vn + "_varatt"][1]["QC_indicator"] = "No QC was performed"
             metadata[vn + "_varatt"][1]["processing_level"] = \
                 "Instrument data that has been converted to geophysical values"
+            # for carbon, factory calibration was performed
+            if vn.__contains__('COW'):
+                metadata[vn + "_varatt"][1]["processing_level"] = \
+                    "Post-recovery calibrations have been applied"
+                metadata[vn + "_varatt"][1]["comment"] = \
+                    "Factory calibration and postprocessing was done, but not QC"
+
             metadata[vn + "_varatt"][1]["DM_indicator"] = "P"
 
         # Create QC entries
         if "QC" in vn:
             base_variable_for_QC = vn[0:-1 - 2]
-            metadata[vn + "_varatt"] = metadata["QC_varatt"]
+            metadata[vn + "_varatt"] = copy.deepcopy(metadata["QC_varatt"])
             metadata[vn + "_varatt"][1]["long_name"] = \
-                metadata[base_variable_for_QC + "_varatt"][1]["long_name"] \
-                + " quality flag"
+                metadata[base_variable_for_QC + "_varatt"][1]["long_name"] + " quality flag"
 
         # Add sensor attributes from deployment_info
         if "QC" not in vn:
@@ -73,8 +79,9 @@ def create_metadata_json(deployment_info, variables_list, dimensions_variables):
     # Global attributes
     # Set global attributes values from the deployments file
     globalatt_fromfile = deployment_info.index[deployment_info.index.str.contains("GLOBAL_")]
-    for gf in globalatt_fromfile:
-        metadata['globalatt'][0][gf] = deployment_info[gf] # Remove initial "GLOBAL_"]
+    globalatt = [x.strip('GLOBAL_') for x in globalatt_fromfile]
+    for gf in globalatt:
+        metadata['globalatt'][0][gf] = deployment_info["GLOBAL_"+gf] # Remove initial "GLOBAL_"]
 
     # Global attributes calculated from dataset values
     base_date=datetime.datetime(1950,1,1,0,0,0)
