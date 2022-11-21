@@ -5,20 +5,32 @@ import pandas as pd
 import numpy as np
 # custom functions (instead of calling the scripts
 from read_StM import create_StM_data_per_instrument
+from read_StM import create_StM_data_3d_array
 from create_dataset_json import create_metadata_json
 
 # Read and loop through the deployments information file
-deployments_file = "testdeployments_perinstrument.csv"
-deployments = pd.read_csv(deployments_file, sep=",", dtype='str',
+file_format='3d' # or per_instrument
+
+if file_format == '3d':
+    deployments_file = "testdeployments.tsv"
+elif file_format == 'per_instrument':
+    deployments_file = "testdeployments_perinstrument.tsv"
+
+deployments = pd.read_csv(deployments_file, sep="\t", dtype='str',
                           converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
 
 for ind, deployment_info in deployments.iterrows():
     if deployment_info['create_nc']=='Y':
         deployment_info = deployment_info.replace(np.nan, '', regex=True)  # Replace nan with empty text
 
-        # Read input data files and create 3d array
-        (dimensions_variables, variables_list, data_array) \
-            = create_StM_data_per_instrument(deployment_info)
+        # Read input data files and create 3d array or per-instrument files
+        if file_format == '3d':
+            (dimensions_variables, variables_list, data_array) \
+                = create_StM_data_3d_array(deployment_info)
+        elif file_format == 'per_instrument':
+            (dimensions_variables, variables_list, data_array) \
+                = create_StM_data_per_instrument(deployment_info)
+
         # Create the metadata json file
         (json_filename) \
             = create_metadata_json(deployment_info, variables_list, dimensions_variables)

@@ -109,6 +109,10 @@ def create_metadata_json(deployment_info, variables_list, dimensions_variables):
         isodate.duration_isoformat(
             datetime.timedelta(
                 dimensions_variables['time_variable'].diff().mode().item()))  # pick the mode
+    metadata['globalatt'][0]["date_created"] = \
+        datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    metadata['globalatt'][0]["history"] = \
+        datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ") + ": Creation"
 
     # Remove empty attributes. It's buggy, will figure out later
     # clean_empty_entries(metadata)

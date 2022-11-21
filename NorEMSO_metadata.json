@@ -52,11 +52,17 @@
       "institution_edmo_code": "4595",
       "site_code": "",
       "emso_facility": "Nordic_Seas",
-      "project": "NorEMSO",
+      "project_name": "The Norwegian node for the European Multidisciplinary Seafloor and water column Observatory",
+      "project_short_name": "NorEMSO",
+      "project_number": "295962",
+      "project_funder": "Research Council of Norway",
+      "project_funder_Crossref_id":"http://dx.doi.org/10.13039/501100005416",
       "nominal_position": "",
       "doi": "",
       "in_situ_samples_deployment": "",
-      "in_situ_samples_recovery": ""
+      "in_situ_samples_recovery": "",
+      "in_situ_samples_other": "",
+      "comment": "Multiple sensor attributes are provided from shallower to deeper. Single attributes where multiple sensors are present apply to all of them."
     }
   ],
   "TIME_dimatt": [
@@ -278,11 +284,83 @@
       "comment": ""
     }
   ],
+  "UCUR_varatt": [
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
+    {
+      "standard_name": "eastward_sea_water_velocity",
+      "units": "m/s",
+      "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
+      "long_name": "West-east current component",
+      "coverage_content_type": "physicalMeasurement",
+      "QC_indicator": "All QC tests passed",
+      "processing_level": "Data manually reviewed",
+      "valid_min": -10.0 ,
+      "valid_max": 10.0,
+      "ancillary_variables": "UCUR_QC",
+      "uncertainty": "",
+      "accuracy": "",
+      "precision": "",
+      "resolution": "",
+      "DM_indicator": "D",
+      "reference_scale": "",
+      "sdn_parameter_name": "Eastward velocity of water current in the water body",
+      "sdn_parameter_urn": "SDN:P01::LCEWZZ01",
+      "sdn_uom_name": "Metres per second",
+      "sdn_uom_urn": "SDN:P06::UVAA",
+      "sensor_model": "",
+      "sensor_manufacturer": "",
+      "sensor_SeaVox_L22_code": "",
+      "sensor_reference": "",
+      "sensor_serial_number": "",
+      "sensor_mount": "mounted on mooring line",
+      "sensor_orientation": "vertical",
+      "sensor_data_start_date": "",
+      "sensor_data_end_date": "",
+      "sensor_data_file_DOI": "",
+      "comment": ""
+    }
+  ],
+  "VCUR_varatt": [
+    {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
+    {
+      "standard_name": "northward_sea_water_velocity",
+      "units": "m/s",
+      "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
+      "long_name": "South-north current component",
+      "coverage_content_type": "physicalMeasurement",
+      "QC_indicator": "All QC tests passed",
+      "processing_level": "Data manually reviewed",
+      "valid_min": -10.0 ,
+      "valid_max": 10.0,
+      "ancillary_variables": "VCUR_QC",
+      "uncertainty": "",
+      "accuracy": "",
+      "precision": "",
+      "resolution": "",
+      "DM_indicator": "D",
+      "reference_scale": "",
+      "sdn_parameter_name": "Northward velocity of water current in the water body",
+      "sdn_parameter_urn": "SDN:P01::LCNSZZ01",
+      "sdn_uom_name": "Metres per second",
+      "sdn_uom_urn": "SDN:P06::UVAA",
+      "sensor_model": "",
+      "sensor_manufacturer": "",
+      "sensor_SeaVox_L22_code": "",
+      "sensor_reference": "",
+      "sensor_serial_number": "",
+      "sensor_mount": "mounted on mooring line",
+      "sensor_orientation": "vertical",
+      "sensor_data_start_date": "",
+      "sensor_data_end_date": "",
+      "sensor_data_file_DOI": "",
+      "comment": ""
+    }
+  ],
     "PREM_varatt": [
     {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
     {
       "standard_name": "",
-      "units": "decibar",
+      "units": "mbar",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "pressure at CO2 sensor equilibrator membrane",
       "coverage_content_type": "physicalMeasurement",
@@ -317,7 +395,7 @@
     {"_FillValue": -999, "datatype": "f","dimensions": ["DEPTH","TIME"]},
     {
       "standard_name": "",
-      "units": "uatm",
+      "units": "ppm",
       "coordinates":"TIME DEPTH LATITUDE LONGITUDE",
       "long_name": "mole fraction of CO2 in seawater",
       "coverage_content_type": "physicalMeasurement",
@@ -418,6 +496,9 @@
       "comment": ""
     }
   ],
+
+
+
   "QC_varatt": [
     {"_FillValue": -127, "datatype": "b", "dimensions": ["DEPTH","TIME"]},
     {
