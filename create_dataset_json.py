@@ -15,7 +15,8 @@ def clean_empty_entries(d):
     return d
 
 
-def create_metadata_json(deployment_info, variables_list, dimensions_variables):
+def create_metadata_json(deployment_info, data_array_dict, dimensions_variables):
+    variables_list = data_array_dict.keys()
     json_filename = deployment_info["INTERNAL_ID"]+".json"
 
     ### Create dataset json metadata file from template
@@ -67,14 +68,27 @@ def create_metadata_json(deployment_info, variables_list, dimensions_variables):
             sensor_info = deployment_info.loc[deployment_info.index.str.contains(base_variable)]
             for s in sensor_info.index:
                 metadata[vn + "_varatt"][1][s[5:]] = deployment_info[s]
+            # Remove some attributes that are not calculated/used yet:
+            metadata[vn + "_varatt"][1].pop("sensor_data_start_date")
+            metadata[vn + "_varatt"][1].pop("sensor_data_end_date")
+            # Create start and end date sensor values
+            #metadata[vn + "_varatt"][1]["sensor_data_start_date"]=\
+            # ().strftime("%Y-%m-%dT%H:%M:%SZ")
+            #metadata[vn + "_varatt"][1]["sensor_data_end_date"]=
+            # ().strftime("%Y-%m-%dT%H:%M:%SZ")
 
         # Comments to salinity do not apply to conductivity
         metadata["CNDC_varatt"][1]["comment"] = ""
 
-        # remove non-used entries (e.g. PCOW in physics file)
-
     # Remove generic QC_varatt entry
     metadata.pop("QC_varatt")
+
+    # remove non-used entries (e.g. PCOW in physics file)
+    vars_in_json = [m[0:-7] for m in metadata.keys() if m.__contains__("varatt")]
+    set(vars_in_json) & set(variables_list)
+    for vinj in vars_in_json:
+        if vinj not in variables_list:
+            metadata.pop(vinj + "_varatt")
 
     # Global attributes
     # Set global attributes values from the deployments file

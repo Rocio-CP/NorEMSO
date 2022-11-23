@@ -4,36 +4,34 @@ import re
 import pandas as pd
 import numpy as np
 # custom functions (instead of calling the scripts
-from read_StM import create_StM_data_per_instrument
-from read_StM import create_StM_data_3d_array
+from read_StM import read_StM_files
 from create_dataset_json import create_metadata_json
 
+# Pick whether it'll be for archiving (only Station M for now) or ERDDAP; "archive" vs "emso_erddap"
+file_format="archive" #"archive" # or "emso_erddap"
+variables_list_emso_erddap=['TEMP','TEMP_QC','PSAL','PSAL_QC','CNDC','CNDC_QC','PRES','PRES_QC','FCOW','FCOW_QC']
+
+if file_format == 'archive':
+    deployments_file = "deployments_info_archive.tsv"
+elif file_format == 'emso_erddap':
+    deployments_file = "deployments_info_emso_erddap.tsv"
+
 # Read and loop through the deployments information file
-file_format='3d' # or per_instrument
-
-if file_format == '3d':
-    deployments_file = "testdeployments.tsv"
-elif file_format == 'per_instrument':
-    deployments_file = "testdeployments_perinstrument.tsv"
-
 deployments = pd.read_csv(deployments_file, sep="\t", dtype='str',
                           converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
 
 for ind, deployment_info in deployments.iterrows():
     if deployment_info['create_nc']=='Y':
         deployment_info = deployment_info.replace(np.nan, '', regex=True)  # Replace nan with empty text
-
-        # Read input data files and create 3d array or per-instrument files
-        if file_format == '3d':
-            (dimensions_variables, variables_list, data_array) \
-                = create_StM_data_3d_array(deployment_info)
-        elif file_format == 'per_instrument':
-            (dimensions_variables, variables_list, data_array) \
-                = create_StM_data_per_instrument(deployment_info)
+        # Create the data array and dimension variables
+        (dimensions_variables, data_array_dict) = read_StM_files(deployment_info)
 
         # Create the metadata json file
+        variables_list=data_array_dict.keys()
+        if file_format == 'emso_erddap':
+            variables_list=list(set(variables_list)&set(variables_list_emso_erddap))
         (json_filename) \
-            = create_metadata_json(deployment_info, variables_list, dimensions_variables)
+            = create_metadata_json(deployment_info, data_array_dict, dimensions_variables)
 
         # Read metadata json back into a dictionary
         with open(json_filename) as json_file:
@@ -82,7 +80,8 @@ for ind, deployment_info in deployments.iterrows():
             for key, value in variable_attributes.items():
                 variable.setncattr(key, value)
             # Variable values
-            variable[:] = data_array[:, :, variable_ind]
+            variable[:] = data_array_dict[variable_name]
+            #variable[:] = data_array[:, :, variable_ind]
 
         # Set global attributes
         global_attributes = [g for g in attributes.keys() if "global" in g]
