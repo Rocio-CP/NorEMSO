@@ -67,7 +67,9 @@ def create_metadata_json(deployment_info, data_array_dict, dimensions_variables)
 
             sensor_info = deployment_info.loc[deployment_info.index.str.contains(base_variable)]
             for s in sensor_info.index:
-                metadata[vn + "_varatt"][1][s[5:]] = deployment_info[s]
+                # The comments mostly apply to the calibrated values.
+                if "comment" in s and "UNCALIBRATED" not in vn:
+                    metadata[vn + "_varatt"][1][s[5:]] = deployment_info[s]
             # Remove some attributes that are not calculated/used yet:
             metadata[vn + "_varatt"][1].pop("sensor_data_start_date")
             metadata[vn + "_varatt"][1].pop("sensor_data_end_date")

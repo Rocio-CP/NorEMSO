@@ -59,9 +59,7 @@
       "project_funder_Crossref_id":"http://dx.doi.org/10.13039/501100005416",
       "nominal_position": "",
       "doi": "",
-      "in_situ_samples_deployment": "",
-      "in_situ_samples_recovery": "",
-      "in_situ_samples_other": "",
+      "in_situ_samples": "",
       "comment": "Multiple sensor attributes are provided from shallower to deeper. Single attributes where multiple sensors are present apply to all of them."
     }
   ],
