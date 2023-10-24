@@ -1,93 +1,69 @@
-from netCDF4 import Dataset
-import json
-import re
-import pandas as pd
-import numpy as np
-# custom functions (instead of calling the scripts
-from read_StM import read_StM_files
-from create_dataset_json import create_metadata_json
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Aug  7 13:18:00 2023
 
-# Pick whether it'll be for archiving (only Station M for now) or ERDDAP; "archive" vs "emso_erddap"
-file_format="archive" #"archive" # or "emso_erddap"
-variables_list_emso_erddap=['TEMP','TEMP_QC','PSAL','PSAL_QC','CNDC','CNDC_QC','PRES','PRES_QC','FCOW','FCOW_QC']
+@author: a40753
+"""
 
-if file_format == 'archive':
-    deployments_file = "deployments_info_archive.tsv"
-elif file_format == 'emso_erddap':
-    deployments_file = "deployments_info_emso_erddap.tsv"
+import os
+# custom functions (instead of calling the scripts)
+import read_input_files as rif
+import create_dataset_json as cmj
+import common_info as ci
+import create_nc as cn
 
-# Read and loop through the deployments information file
-deployments = pd.read_csv(deployments_file, sep="\t", dtype='str',
-                          converters={'DEPLOY_LAT': float, 'DEPLOY_LON': float})
+NorEMSO_DB = ci.NorEMSO_DB
+variables_dict = ci.variables_dict
+erddap_files_path = ci.erddap_files_path
+archive_files_path = ci.archive_files_path
 
-for ind, deployment_info in deployments.iterrows():
-    if deployment_info['create_nc']=='Y':
-        deployment_info = deployment_info.replace(np.nan, '', regex=True)  # Replace nan with empty text
-        # Create the data array and dimension variables
-        (dimensions_variables, data_array_dict) = read_StM_files(deployment_info)
+# Pick whether it'll be for archiving (one file per deployment) or ERDDAP (one file per sensor and deployment)
+# "archive" vs "emso_erddap"
+file_format = "emso_erddap"
+#variables_list_emso_erddap = ['TEMP', 'TEMP_QC', 'PSAL', 'PSAL_QC',
+#                              'CNDC', 'CNDC_QC', 'PRES', 'PRES_QC', 'FCOW', 'FCOW_QC']
 
-        # Create the metadata json file
-        variables_list=data_array_dict.keys()
-        if file_format == 'emso_erddap':
-            variables_list=list(set(variables_list)&set(variables_list_emso_erddap))
-        (json_filename) \
-            = create_metadata_json(deployment_info, data_array_dict, dimensions_variables)
+deployments_list = [#'F10_2020',
+                    #'StM_2020', 'StM_2021',
+                    #'S1S_2020', 'S1N_2020',
+                    'S1S_2021'#, 'S1N_2021',
+                    #'S1S_2022', 'S1N_2022',
+                    #'SD1_2021', 'SD2_2021', 'SD3_2021', 'SD4_2021'
+                    ]
 
-        # Read metadata json back into a dictionary
-        with open(json_filename) as json_file:
-            attributes = json.load(json_file)
 
-        # Create NetCDF file
-        nc_filename = deployment_info["INTERNAL_ID"] + ".nc"
-        nc = Dataset(nc_filename, format="NETCDF4_CLASSIC", mode="w")
+for depl in deployments_list:
+    current_deployment_code = depl
 
-        # Generate dimensions and their variables
-        # dimensions_variables is a DICTIONARY (with names and values)
-        for d in dimensions_variables.keys():
-            dimension_name = str.upper(re.split('_variable', d)[0])
+    filt = NorEMSO_DB['input_files']['deployment_code'] == current_deployment_code
+    current_deployment_files = NorEMSO_DB['input_files'][filt]
 
-            # Create dimension
-            dimension_length = len(dimensions_variables[d])
-            dim = nc.createDimension(dimension_name, dimension_length)
-            # Attributes needed to create the variable
-            create_attributes = attributes[dimension_name + "_dimatt"][0]
+    print(depl)
 
-            # Create dimension variable
-            dimension_variable = nc.createVariable(dimension_name,
-                                                   create_attributes["datatype"],
-                                                   create_attributes["dimensions"],
-                                                   fill_value=create_attributes["_FillValue"])
-            # Dimension variable attributes
-            dimension_variable_attributes = attributes[dimension_name + "_dimatt"][1]
-            for key, value in dimension_variable_attributes.items():
-                dimension_variable.setncattr(key, value)
-            # Dimension variable values
-            dimension_variable[:] = dimensions_variables[d]
+    # Function that reads the file and creates a dataframe (one per sensor) with harmonized column names
+    for ind, cfile in enumerate(current_deployment_files['input_files']):
 
-        # Generate variables
-        # variables_list is a list of variables' names (values are in data_array)
-        for variable_ind, variable_name in enumerate(variables_list):
-            # Attributes needed to create the variable
-            create_attributes = attributes[variable_name + "_varatt"][0]
+        if cfile.__contains__('ADCP'): continue # ADCPs require different treatment; they're timeseriesprofiles
 
-            # Create variable
-            variable = nc.createVariable(variable_name,
-                                         create_attributes["datatype"],
-                                         create_attributes["dimensions"],
-                                         fill_value=create_attributes["_FillValue"])
-            # Variable attributes
-            variable_attributes = attributes[variable_name + "_varatt"][1]
-            for key, value in variable_attributes.items():
-                variable.setncattr(key, value)
-            # Variable values
-            variable[:] = data_array_dict[variable_name]
-            #variable[:] = data_array[:, :, variable_ind]
+        current_file_fullpath = os.path.join(ci.input_files_path,
+                                             current_deployment_files['input_files_path'].iloc[ind],
+                                             cfile)
 
-        # Set global attributes
-        global_attributes = [g for g in attributes.keys() if "global" in g]
-        global_attributes_dict = attributes[global_attributes[0]][0]
-        nc.setncatts(global_attributes_dict)
+        print(cfile)
 
-        # Close NetCDF file
-        # print(nc)
-        nc.close()
+        one_sensor_dataframe = rif.read_input(current_file_fullpath)
+
+        # Function to generate metadata json
+        metadata = cmj.create_metadata_json(
+            current_file_fullpath, one_sensor_dataframe)
+
+        # Create NetCDF file name = Deployment + L22 + SN + nominal depth
+        instrument_id = ci.NorEMSO_DB['input_files'].loc[(NorEMSO_DB['input_files']['input_files']==cfile) &
+                                                         (NorEMSO_DB['input_files']['deployment_code']==depl), 'sensor_ID'].item()
+        nomdepth= ci.NorEMSO_DB['sensors_deployed'].loc[(NorEMSO_DB['sensors_deployed']['sensor_ID']==instrument_id) &
+                                                        (NorEMSO_DB['sensors_deployed']['deployment_code']==depl), 'sensor_depth'].item()
+        nc_filename = depl + '_' + instrument_id + '_' + nomdepth + 'm.nc'
+
+        # Function to create netcdf from dataframe + json
+        nc_fullpath = os.path.join(erddap_files_path, nc_filename)
+        cn.create_nc_erddap(metadata, one_sensor_dataframe, nc_fullpath)

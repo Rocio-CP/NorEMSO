@@ -12,10 +12,21 @@ Thumbs.db
 *.swp
 *.m~
 
+# Other files
+*.toml
 
 ##### Python, PyCharm
 .idea/*
 venv/*
+.spyproject/*
+__pycache__/*
+
+# Tools from others
+metadata-harmonizer/*
+metadata-harmonizer
+
+# Discarded scripts
+OLD/*
 
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm

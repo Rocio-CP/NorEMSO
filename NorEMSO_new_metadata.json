@@ -1,0 +1,236 @@
+{
+  "globalatt": [
+    {
+      "title": "",
+	  "summary":"",
+	  "platform_code": "",
+      "data_mode": "D",
+      "summary": "",
+      "wmo_platform_code": "",
+      "source": "",
+      "principal_investigator": "",
+      "principal_investigator_email": "",
+      "principal_investigator_id": "",
+      "array": "",
+      "network": "EMSO-ERIC",
+      "keywords_vocabulary": "",
+      "keywords": "",
+      "sea_area": "",
+      "geospatial_lat_min": "",
+      "geospatial_lat_max": "",
+      "geospatial_lat_units": "degree_north",
+      "geospatial_lon_min": "",
+      "geospatial_lon_max": "",
+      "geospatial_lon_units": "degree_east",
+      "geospatial_vertical_min": "",
+      "geospatial_vertical_max": "",
+      "geospatial_vertical_positive": "down",
+      "geospatial_vertical_units": "meter",
+      "time_coverage_start": "",
+      "time_coverage_end": "",
+      "time_coverage_resolution": "",
+      "cdm_data_type": "station_profile",
+      "featureType": "timeSeriesProfile",
+      "platform_deployment_date": "",
+      "platform_deployment_ship_name": "",
+      "platform_deployment_cruise_name": "",
+      "platform_deployment_ship_ICES_code": "",
+      "platform_deployment_cruise_expocode": "",
+      "platform_recovery_date": "",
+      "platform_recovery_ship_name": "",
+      "platform_recovery_cruise_name": "",
+      "platform_recovery_ship_ICES_code": "",
+      "platform_recovery_cruise_expocode": "",
+      "data_type": "OceanSITES profile data",
+      "format_version": "1.4",
+      "Conventions": "OceanSITES-v1.4,SeaDataNet_1.0,COARDS,CF-1.6",
+      "update_interval": "void",
+      "license": "CC-BY-4.0",
+	  "license_uri": "https://spdx.org/licenses/CC-BY-4.0.json",
+      "date_created": "",
+      "history": "",
+      "processing_level": "Data manually reviewed",
+      "QC_indicator": "excellent",
+      "institution": "",
+      "institution_edmo_code": "",
+	  "institution_edmo_uri": "",
+	  "institution_ror_uri": "",
+      "site_code": "",
+      "emso_facility": "Nordic Seas",
+      "project_name": "The Norwegian node for the European Multidisciplinary Seafloor and water column Observatory",
+      "project": "NorEMSO",
+      "project_number": "295962",
+      "project_funder": "Research Council of Norway",
+      "project_funder_Crossref_id": "http://dx.doi.org/10.13039/501100005416",
+      "nominal_position": "",
+      "doi": "",
+      "in_situ_samples": "",
+	  "references": "",
+      "comment": ""
+    }
+  ],
+  "TIME_dimatt": [
+    {
+      "_FillValue": -999,
+      "datatype": "f",
+      "dimensions": "TIME"
+    },
+    {
+      "standard_name": "time",
+      "long_name": "time of measurement",
+      "units": "days since 1950-01-01T00:00:00Z",
+      "valid_min": 0.0,
+      "valid_max": 90000.0,
+      "uncertainty": "",
+      "comment": "",
+      "axis": "T",
+      "ancillary_variables": "",
+      "QC_indicator": "good data",
+      "sdn_parameter_name": "Elapsed time relative to 1950-01-01T00:00:00Z",
+      "sdn_parameter_urn": "SDN:P01::ELTJLD01",
+      "sdn_uom_name": "days",
+      "sdn_uom_urn": "SDN:P06::UTAA"
+    }
+  ],
+  "LATITUDE_dimatt": [
+    {
+      "_FillValue": -999,
+      "datatype": "f",
+      "dimensions": "LATITUDE"
+    },
+    {
+      "standard_name": "latitude",
+      "long_name": "Latitude of each location",
+      "units": "degrees_north",
+      "valid_min": -90.0,
+      "valid_max": 90.0,
+      "uncertainty": "",
+      "comment": "",
+      "axis": "Y",
+      "ancillary_variables": "POSITION_QC",
+      "QC_indicator": "good data",
+      "sdn_parameter_name": "Latitude north",
+      "sdn_parameter_urn": "SDN:P01::ALATZZ01",
+      "sdn_uom_name": "Degrees north",
+      "sdn_uom_urn": "SDN:P06::DEGN"
+    }
+  ],
+  "LONGITUDE_dimatt": [
+    {
+      "_FillValue": -999,
+      "datatype": "f",
+      "dimensions": "LONGITUDE"
+    },
+    {
+      "standard_name": "longitude",
+      "long_name": "Longitude of each location",
+      "units": "degrees_east",
+      "valid_min": -180.0,
+      "valid_max": 180.0,
+      "uncertainty": "",
+      "comment": "",
+      "axis": "X",
+      "ancillary_variables": "POSITION_QC",
+      "QC_indicator": "good data",
+      "sdn_parameter_name": "Longitude east",
+      "sdn_parameter_urn": "SDN:P01::ALONZZ01",
+      "sdn_uom_name": "Degrees east",
+      "sdn_uom_urn": "SDN:P06::DEGE"
+    }
+  ],
+  "DEPTH_dimatt": [
+    {
+      "_FillValue": -999,
+      "datatype": "f",
+      "dimensions": "DEPTH"
+    },
+    {
+      "standard_name": "depth",
+      "long_name": "Nominal depth of measurements",
+      "units": "meters",
+      "valid_min": 0.0,
+      "valid_max": 10000.0,
+      "uncertainty": "",
+      "comment": "",
+      "axis": "Z",
+      "ancillary_variables": "DEPTH_QC",
+      "QC_indicator": "nominal values",
+      "sdn_parameter_name": "Depth (spatial coordinate) relative to water surface in the water body",
+      "sdn_parameter_urn": "SDN:P01::ADEPZZ01",
+      "sdn_uom_name": "meters",
+      "sdn_uom_urn": "SDN:P06::ULAA",
+	  "positive": "down"
+    }
+  ],
+  "VARS_varatt": [
+    {
+      "_FillValue": -999,
+      "datatype": "f",
+      "dimensions": [
+        "TIME",
+        "DEPTH"
+      ]
+    },
+    {
+      "standard_name": "",
+      "units": "",
+      "coordinates": "TIME DEPTH LATITUDE LONGITUDE",
+      "long_name": "",
+      "coverage_content_type": "physicalMeasurement",
+      "QC_indicator": "All QC tests passed",
+      "processing_level": "Data manually reviewed",
+      "valid_min": "",
+      "valid_max": "",
+      "ancillary_variables": "",
+      "uncertainty": "",
+      "accuracy": "",
+      "precision": "",
+      "resolution": "",
+      "DM_indicator": "D",
+      "sdn_parameter_name": "",
+      "sdn_parameter_urn": "",
+      "sdn_parameter_uri": "",
+      "sdn_uom_name": "",
+      "sdn_uom_urn": "",
+      "sdn_uom_uri": "",
+      "sensor_model": "",
+      "sensor_manufacturer": "",
+      "sensor_manufacturer_urn": "",
+      "sensor_manufacturer_uri": "",
+      "sensor_SeaVoX_L22_code": "",
+      "sensor_reference": "",
+      "sensor_serial_number": "",
+      "sensor_mount": "mounted_on_mooring_line",
+      "sensor_orientation": "downward",
+      "comment": ""
+    }
+  ],
+  "QC_varatt": [
+    {
+      "_FillValue": -127,
+      "datatype": "b",
+      "dimensions": [
+        "TIME",
+        "DEPTH"
+      ]
+    },
+    {
+      "long_name": "",
+      "coverage_content_type": "qualityInformation",
+      "conventions": "OceanSITES QC Flags",
+      "flag_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "flag_meanings": "no_qc_performed good_data probably_good_data bad_data_that_are_potentially_correctable bad_data value_changed not_used nominal_value interpolated_value missing_value"
+    }
+  ]
+}

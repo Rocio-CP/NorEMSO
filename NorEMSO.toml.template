@@ -1,0 +1,7 @@
+root_path=''
+info_path='./NorEMSO_DB/'
+input_files_path=''
+temp_files_path=''
+erddap_files_path=''
+archive_files_path=''
+
